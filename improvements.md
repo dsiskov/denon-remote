@@ -1,6 +1,3 @@
-## reading xml response
-https://stackoverflow.com/questions/48788185/parse-xml-from-axios-response-pushing-to-vue-data-array
-
 # Requests
 
 `set volume`
@@ -19,21 +16,6 @@ Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9,mk;q=0.8,nl;q=0.7,hr;q=0.6
 Cookie: ZoneName=MAIN%20ZONE
 cmd0=PutMasterVolumeSet%2F-74.0
-```
-
-`initial state`
-
-```javascript
-GET http://192.168.1.10/goform/formMainZone_MainZoneXml.xml HTTP/1.1
-Host: 192.168.1.10
-Connection: keep-alive
-Accept: */*
-X-Requested-With: XMLHttpRequest
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36
-Referer: http://192.168.1.10/MainZone/index.html
-Accept-Encoding: gzip, deflate
-Accept-Language: en-US,en;q=0.9,mk;q=0.8,nl;q=0.7,hr;q=0.6
-Cookie: ZoneName=MAIN%20ZONE
 ```
 
 `internet radio`

@@ -2,8 +2,9 @@ import React, { Component } from "react"
 import { Row, Col } from 'reactstrap'
 import axios from 'axios'
 
-import CustomSlider from '../presenters/atoms/CustomSlider/CustomSlider'
+import Slider from 'react-input-slider';
 import * as routes from '../utils/routes'
+import * as commands from '../utils/commands'
 
 // icons
 import { ReactComponent as PowerIcon } from '../assets/icons/power.svg'
@@ -16,37 +17,28 @@ export default class HomePage extends Component {
 
 		this.state = {
 			avrSettings: {
-				masterVolume: 25
+				masterVolume: 25,
+				power: 'STANDBY',
+				mute: false
 			}
 		}
+
+		this.executeCommand = this.executeCommand.bind(this);
 	}
 
 	componentDidMount() {
 		this.setState({ avrSettings: this.getAvrSettings() });
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		const {
-			masterVolume
-		} = this.state;
-
-		if (prevState.avrSettings.masterVolume !== masterVolume) {
-			console.log(`setting new volume to ${masterVolume}`)
-			let response = await axios.post(routes.EXECUTE_ROUTE, {command: this.getVolumeCommand(masterVolume)})
-			console.log(response.data)
-		}
-	}
-
 	async getAvrSettings() {
-		console.log('getting initial state of Denon')
 		let response = await axios.get(routes.SETTINGS_ROUTE)
-		console.log(response.data)
-
-		return {};
+		this.setState({ avrSettings: response.data.result })
 	}
 
-	getVolumeCommand = () => {
-		// todo
+	// todo: setup debounce
+	async executeCommand(command, newValue) {
+		await axios.post(routes.EXECUTE_ROUTE, { command, value: newValue })
+		getAvrSettings()
 	}
 
 	render() {
@@ -58,7 +50,11 @@ export default class HomePage extends Component {
 							<PowerIcon />
 						</button>
 
-						<CustomSlider value={this.state.avrSettings.masterVolume} />
+						<Slider
+							axis="x"
+							x={state.avrSettings.masterVolume}
+							onChange={({ x }) => this.executeCommand(commands.SET_VOLUME, x)}
+						/>
 					</Col>
 				</Row>
 			</div>

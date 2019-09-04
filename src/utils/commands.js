@@ -1,0 +1,1 @@
+export const SET_VOLUME = 'set-master-volume'
