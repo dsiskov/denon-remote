@@ -22,12 +22,21 @@ export default class HomePage extends Component {
 				mute: false
 			}
 		}
-
-		this.executeCommand = this.executeCommand.bind(this);
 	}
 
 	componentDidMount() {
 		this.setState({ avrSettings: this.getAvrSettings() });
+	}
+
+	togglePower = () => {
+		const commandParameter = this.state.avrSettings.power === 'STANDBY' ? 'ON' : 'OFF';
+		console.log(commandParameter);
+		this.executeCommand(commands.TOGGLE_POWER, commandParameter)
+	}
+
+	// todo: setup debounce
+	setVolume = (newVolume) => {
+		// commands.SET_VOLUME
 	}
 
 	async getAvrSettings() {
@@ -35,10 +44,10 @@ export default class HomePage extends Component {
 		this.setState({ avrSettings: response.data.result })
 	}
 
-	// todo: setup debounce
-	async executeCommand(command, newValue) {
-		await axios.post(routes.EXECUTE_ROUTE, { command, value: newValue })
-		getAvrSettings()
+
+	async executeCommand(command, commandParameter) {
+		await axios.post(routes.EXECUTE_ROUTE, { command, commandParameter })
+		this.getAvrSettings()
 	}
 
 	render() {
@@ -46,14 +55,14 @@ export default class HomePage extends Component {
 			<div className="container-fluid">
 				<Row>
 					<Col xs={{ size: 1, offset: 1 }} sm={{ size: 1, offset: 1 }} lg={{ size: 1, offset: 5 }} >
-						<button className="unstyled-button">
+						<button className="unstyled-button" onClick={this.togglePower}>
 							<PowerIcon />
 						</button>
 
 						<Slider
 							axis="x"
-							x={state.avrSettings.masterVolume}
-							onChange={({ x }) => this.executeCommand(commands.SET_VOLUME, x)}
+							x={this.state.avrSettings.masterVolume}
+							onChange={({ x }) => this.setVolume(x)}
 						/>
 					</Col>
 				</Row>

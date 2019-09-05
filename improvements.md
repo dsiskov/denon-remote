@@ -1,5 +1,7 @@
 # Requests
 
+power command: `cmd0=PutZone_OnOff%2F<value>`, where value = `ON/OFF`
+
 `set volume`
 ```javascript
 POST http://192.168.1.10/MainZone/index.put.asp HTTP/1.1
