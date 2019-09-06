@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Row, Col } from 'reactstrap'
+import { Row, Col, Container } from 'reactstrap'
 import axios from 'axios'
 
 import Slider from 'react-input-slider';
@@ -51,21 +51,46 @@ export default class HomePage extends Component {
 	}
 
 	render() {
+		const icons = [
+			<PowerIcon />, <PowerIcon />, <PowerIcon />, <PowerIcon />, <PowerIcon />
+		]
 		return (
 			<div className="container-fluid">
-				<Row>
-					<Col xs={{ size: 1, offset: 1 }} sm={{ size: 1, offset: 1 }} lg={{ size: 1, offset: 5 }} >
-						<button className="unstyled-button" onClick={this.togglePower}>
-							<PowerIcon />
-						</button>
 
-						<Slider
-							axis="x"
-							x={this.state.avrSettings.masterVolume}
-							onChange={({ x }) => this.setVolume(x)}
-						/>
-					</Col>
-				</Row>
+				<Container style={{
+					display: "flex", flexDirection: "column",
+					minHeight: "99vh"
+				}}>
+					{/* top row */}
+					<Row>
+						<Col xs={{ size: 1, offset: 11 }} style={{ marginTop: "10px" }}>
+							<button className="unstyled-button" onClick={this.togglePower}>
+								<PowerIcon />
+							</button>
+						</Col>
+					</Row>
+
+					<Row>
+						<Col xs={{ size: 3 }} sm={{ size: 3 }}>
+							{icons.map(x => x)}
+						</Col>
+
+					</Row>
+
+					<div style={{ marginTop: "auto" }}>
+						<Row class="wrapper">
+							<Col xs={{ size: 12 }} style={{ marginTop: "10px", }}>
+								<Slider
+									style={{ width: "100%" }}
+									axis="x"
+									x={this.state.avrSettings.masterVolume}
+									onChange={({ x }) => this.setVolume(x)}
+								/>
+							</Col>
+						</Row>
+					</div>
+				</Container>
+
 			</div>
 		)
 	}
