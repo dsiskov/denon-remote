@@ -6,9 +6,12 @@ import Slider from 'react-input-slider';
 import * as routes from '../utils/routes'
 import * as commands from '../utils/commands'
 import * as inputTypes from '../utils/inputs'
-import { ReactComponent as PowerIcon } from '../assets/icons/power.svg'
 import "./homePage.css";
 import _ from 'lodash';
+
+import { ReactComponent as PowerOnIcon } from '../assets/icons/powerOn.svg'
+import { ReactComponent as PowerOffIcon } from '../assets/icons/powerOff.svg'
+
 const searchDebounceTimeInMs = 500;
 
 export default class HomePage extends Component {
@@ -62,9 +65,9 @@ export default class HomePage extends Component {
 
 	render() {
 		const allCommands = [
-			<CommandButton name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.INTERNET_RADIO })} />,
-			<CommandButton name="TV Audio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.TV_AUDIO })} />,
-			<CommandButton name="DVD" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.DVD })
+			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.INTERNET_RADIO })} />,
+			<CommandButton displayname="TV AUDIO" selection={this.state.avrSettings.selection} name="TV Audio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.TV_AUDIO })} />,
+			<CommandButton displayname="DVD" selection={this.state.avrSettings.selection} name="DVD" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.DVD })
 			} />
 		]
 		return (
@@ -78,7 +81,7 @@ export default class HomePage extends Component {
 					<Row>
 						<Col xs={{ size: 1, offset: 11 }} style={{ marginTop: "40px" }}>
 							<button className="unstyled-button" onClick={this.togglePower}>
-								<PowerIcon />
+								{this.state.avrSettings.power === 'STANDBY' ? <PowerOnIcon /> : <PowerOffIcon />}
 							</button>
 						</Col>
 					</Row>
@@ -96,6 +99,13 @@ export default class HomePage extends Component {
 					</Row>
 
 					<div style={{ marginTop: "auto" }}>
+						<Row className="wrapper">
+							<Col xs={{ size: 12 }} style={{ marginBottom: "40px" }}>
+								<span style={{ position: "fixed", left: "50%", "font-weight": "bold" }}>
+									{this.state.avrSettings.masterVolume}
+								</span>
+							</Col>
+						</Row>
 						<Row className="wrapper">
 							<Col xs={{ size: 12 }} style={{ marginBottom: "40px", }}>
 								<Slider
@@ -120,7 +130,9 @@ export default class HomePage extends Component {
 export function CommandButton(props) {
 	return (
 		<button className="unstyled-button" onClick={props.action}>
-			{props.name}
+			<span style={{ "font-weight": props.selection === props.displayname ? "bold" : "normal" }}>
+				{props.name}
+			</span>
 		</button>
 	);
 }
