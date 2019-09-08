@@ -8,6 +8,8 @@ import * as commands from '../utils/commands'
 import * as inputTypes from '../utils/inputs'
 import { ReactComponent as PowerIcon } from '../assets/icons/power.svg'
 import "./homePage.css";
+import _ from 'lodash';
+const searchDebounceTimeInMs = 500;
 
 export default class HomePage extends Component {
 	constructor(props) {
@@ -18,8 +20,11 @@ export default class HomePage extends Component {
 				masterVolume: 25,
 				power: 'STANDBY',
 				mute: false
-			}
+			},
+			newVolume: 0
 		}
+
+		this.debouncedOnChange = _.debounce(() => this.setNewVolume(), searchDebounceTimeInMs);
 	}
 
 	componentDidMount() {
@@ -33,10 +38,9 @@ export default class HomePage extends Component {
 		this.executeCommand(commands.TOGGLE_POWER, commandParameter)
 	}
 
-	// todo: setup debounce
-	setVolume = (newVolume) => {
-		console.log(newVolume)
-		// commands.SET_VOLUME
+	setNewVolume = () => {
+		console.log(`setting new volume: ${this.state.avrSettings.masterVolume}`)
+		this.executeCommand(commands.SET_VOLUME, this.state.avrSettings.masterVolume)
 	}
 
 	async getAvrSettings() {
@@ -98,7 +102,10 @@ export default class HomePage extends Component {
 									style={{ width: "100%" }}
 									axis="x"
 									x={this.state.avrSettings.masterVolume}
-									onChange={({ x }) => this.setVolume(x)}
+									onChange={({ x }) => {
+										this.setState({ avrSettings: { masterVolume: x } });
+										this.debouncedOnChange();
+									}}
 								/>
 							</Col>
 						</Row>
