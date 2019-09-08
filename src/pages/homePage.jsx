@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { ReactComponent as PowerOnIcon } from '../assets/icons/powerOn.svg'
 import { ReactComponent as PowerOffIcon } from '../assets/icons/powerOff.svg'
 
-const searchDebounceTimeInMs = 500;
+const searchDebounceTimeInMs = 200;
 
 export default class HomePage extends Component {
 	constructor(props) {
@@ -24,7 +24,7 @@ export default class HomePage extends Component {
 				power: 'STANDBY',
 				mute: false
 			},
-			newVolume: 0
+			newVolume: 25
 		}
 
 		this.debouncedOnChange = _.debounce(() => this.setNewVolume(), searchDebounceTimeInMs);
@@ -48,7 +48,7 @@ export default class HomePage extends Component {
 
 	async getAvrSettings() {
 		let response = await axios.get(routes.SETTINGS_ROUTE)
-		this.setState({ avrSettings: response.data.result })
+		this.setState({ avrSettings: response.data.result, newVolume: response.data.result.masterVolume })
 		console.log(response.data.result)
 	}
 
@@ -79,14 +79,14 @@ export default class HomePage extends Component {
 				}}>
 					{/* top row */}
 					<Row>
-						<Col xs={{ size: 1, offset: 11 }} style={{ marginTop: "40px" }}>
+						<Col xs={{ size: 1, offset: 11 }} style={{ marginTop: "40px", marginRight: "20px" }}>
 							<button className="unstyled-button" onClick={this.togglePower}>
-								{this.state.avrSettings.power === 'STANDBY' ? <PowerOnIcon /> : <PowerOffIcon />}
+								{this.state.avrSettings.power === 'STANDBY' ? <PowerOffIcon /> : <PowerOnIcon />}
 							</button>
 						</Col>
 					</Row>
 
-					<Row>
+					<Row style={{ marginTop: "100px" }} >
 						<Col xs={{ size: 3 }} sm={{ size: 3 }}>
 							{allCommands[0]}
 						</Col>
@@ -113,8 +113,8 @@ export default class HomePage extends Component {
 									axis="x"
 									x={this.state.avrSettings.masterVolume}
 									onChange={({ x }) => {
-										this.setState({ avrSettings: { masterVolume: x } });
 										this.debouncedOnChange();
+										this.setState({ avrSettings: { masterVolume: x } });
 									}}
 								/>
 							</Col>
