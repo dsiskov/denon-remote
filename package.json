@@ -1,7 +1,7 @@
 {
   "name": "denon-client",
   "version": "1.0.0",
-  "homepage": "https://dvox.ddns.net/avr",
+  "homepage": "https://localhost/avr",
   "private": true,
   "dependencies": {
     "axios": "^0.19.0",
