@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { ReactComponent as PowerOnIcon } from '../assets/icons/powerOn.svg'
 import { ReactComponent as PowerOffIcon } from '../assets/icons/powerOff.svg'
 
-const searchDebounceTimeInMs = 200;
+const searchDebounceTimeInMs = 50;
 
 export default class HomePage extends Component {
 	constructor(props) {
@@ -36,9 +36,10 @@ export default class HomePage extends Component {
 
 	togglePower = () => {
 		console.log('power')
-		const commandParameter = this.state.avrSettings.power === 'STANDBY' ? 'ON' : 'OFF';
+		const commandParameter = this.state.avrSettings.power === 'STANDBY' ? 'ON' : 'STANDBY';
 		console.log(commandParameter);
 		this.executeCommand(commands.TOGGLE_POWER, commandParameter)
+		this.setState({ avrSettings: { power: commandParameter } })
 	}
 
 	setNewVolume = () => {
@@ -53,21 +54,21 @@ export default class HomePage extends Component {
 	}
 
 	executeCommandWrapper(args) {
-		this.executeCommand(args.command, args.commandParameter);
+		this.executeCommand(args.command, args.commandParameter)
+		this.setState({ avrSettings: { selection: args.displayName } })
 	}
-
 
 	async executeCommand(command, commandParameter) {
 		console.log(`executing: ${command} with paramter: ${commandParameter}`)
 		await axios.post(routes.EXECUTE_ROUTE, { command, commandParameter })
-		this.getAvrSettings()
+		//this.getAvrSettings()
 	}
 
 	render() {
 		const allCommands = [
-			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.INTERNET_RADIO })} />,
-			<CommandButton displayname="TV AUDIO" selection={this.state.avrSettings.selection} name="TV Audio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.TV_AUDIO })} />,
-			<CommandButton displayname="DVD" selection={this.state.avrSettings.selection} name="DVD" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.DVD })
+			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.INTERNET_RADIO, displayName: "NETWORK" })} />,
+			<CommandButton displayname="TV AUDIO" selection={this.state.avrSettings.selection} name="TV Audio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.TV_AUDIO, displayName: "TV AUDIO" })} />,
+			<CommandButton displayname="DVD" selection={this.state.avrSettings.selection} name="DVD" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.DVD, displayName: "DVD" })
 			} />
 		]
 		return (
