@@ -11,6 +11,8 @@ import _ from 'lodash';
 
 import { ReactComponent as PowerOnIcon } from '../assets/icons/powerOn.svg'
 import { ReactComponent as PowerOffIcon } from '../assets/icons/powerOff.svg'
+import { ReactComponent as VolumeOffIcon } from '../assets/icons/volumeOff.svg'
+import { ReactComponent as VolumeOnIcon } from '../assets/icons/volumeOn.svg'
 
 const searchDebounceTimeInMs = 50;
 
@@ -40,6 +42,13 @@ export default class HomePage extends Component {
 		console.log(commandParameter);
 		this.executeCommand(commands.TOGGLE_POWER, commandParameter)
 		//this.setState({ avrSettings: { power: commandParameter } })
+	}
+
+	toggleMute = () => {
+		console.log('mute')
+		const commandParameter = this.state.avrSettings.mute === false ? true : false;
+		console.log(commandParameter);
+		this.executeCommand(commands.TOGGLE_MUTE, commandParameter)
 	}
 
 	setNewVolume = () => {
@@ -106,9 +115,14 @@ export default class HomePage extends Component {
 					<div style={{ marginTop: "auto" }}>
 						<Row className="wrapper">
 							<Col xs={{ size: 12 }} style={{ marginBottom: "40px" }}>
-								<span style={{ position: "fixed", left: "50%", "font-weight": "bold" }}>
-									{this.state.newVolume}
-								</span>
+								<div className="form-inline" style={{ position: "fixed", left: "50%" }}>
+									<button className="unstyled-button" onClick={this.toggleMute}>
+										{!this.state.avrSettings.mute && this.state.avrSettings.mute === true ? <VolumeOffIcon /> : <VolumeOnIcon />}
+									</button>
+									<span style={{ "font-weight": "bold" }}>
+										{this.state.newVolume}
+									</span>
+								</div>
 							</Col>
 						</Row>
 						<Row className="wrapper">
