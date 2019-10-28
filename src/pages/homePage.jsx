@@ -23,14 +23,15 @@ export default class HomePage extends Component {
 				masterVolume: 25,
 				power: 'STANDBY',
 				mute: false
-			}
+			},
+			newVolumne: 25
 		}
 
 		this.debouncedOnChange = _.debounce(() => this.setNewVolume(), searchDebounceTimeInMs);
 	}
 
 	componentDidMount() {
-		this.getAvrSettings()
+		this.getAvrSettings(true)
 	}
 
 	togglePower = () => {
@@ -38,29 +39,33 @@ export default class HomePage extends Component {
 		const commandParameter = this.state.avrSettings.power === 'STANDBY' ? 'ON' : 'OFF';
 		console.log(commandParameter);
 		this.executeCommand(commands.TOGGLE_POWER, commandParameter)
-		this.setState({ avrSettings: { power: commandParameter } })
+		//this.setState({ avrSettings: { power: commandParameter } })
 	}
 
 	setNewVolume = () => {
-		console.log(`setting new volume: ${this.state.avrSettings.masterVolume}`)
-		this.executeCommand(commands.SET_VOLUME, this.state.avrSettings.masterVolume)
+		console.log(`setting new volume: ${this.state.newVolume}`)
+		this.executeCommand(commands.SET_VOLUME, this.state.newVolume)
 	}
 
-	async getAvrSettings() {
+	async getAvrSettings(getVolume) {
 		let response = await axios.get(routes.SETTINGS_ROUTE)
 		this.setState({ avrSettings: response.data.result })
+		if (getVolume) {
+			this.setState({ newVolume: response.data.result.masterVolume })
+		}
+
 		console.log(response.data.result)
 	}
 
 	executeCommandWrapper(args) {
 		this.executeCommand(args.command, args.commandParameter)
-		this.setState({ avrSettings: { selection: args.displayName } })
+		//this.setState({ avrSettings: { selection: args.displayName } })
 	}
 
 	async executeCommand(command, commandParameter) {
 		console.log(`executing: ${command} with paramter: ${commandParameter}`)
 		await axios.post(routes.EXECUTE_ROUTE, { command, commandParameter })
-		//this.getAvrSettings()
+		this.getAvrSettings(false)
 	}
 
 	render() {
@@ -102,7 +107,7 @@ export default class HomePage extends Component {
 						<Row className="wrapper">
 							<Col xs={{ size: 12 }} style={{ marginBottom: "40px" }}>
 								<span style={{ position: "fixed", left: "50%", "font-weight": "bold" }}>
-									{this.state.avrSettings.masterVolume}
+									{this.state.newVolume}
 								</span>
 							</Col>
 						</Row>
@@ -111,10 +116,10 @@ export default class HomePage extends Component {
 								<Slider
 									style={{ width: "100%" }}
 									axis="x"
-									x={this.state.avrSettings.masterVolume}
+									x={this.state.newVolume}
 									onChange={({ x }) => {
 										this.debouncedOnChange();
-										this.setState({ avrSettings: { masterVolume: x } });
+										this.setState({ newVolume: x });
 									}}
 								/>
 							</Col>
