@@ -23,20 +23,19 @@ export default class HomePage extends Component {
 				masterVolume: 25,
 				power: 'STANDBY',
 				mute: false
-			},
-			newVolume: 25
+			}
 		}
 
 		this.debouncedOnChange = _.debounce(() => this.setNewVolume(), searchDebounceTimeInMs);
 	}
 
 	componentDidMount() {
-		this.setState({ avrSettings: this.getAvrSettings() });
+		this.getAvrSettings()
 	}
 
 	togglePower = () => {
 		console.log('power')
-		const commandParameter = this.state.avrSettings.power === 'STANDBY' ? 'ON' : 'STANDBY';
+		const commandParameter = this.state.avrSettings.power === 'STANDBY' ? 'ON' : 'OFF';
 		console.log(commandParameter);
 		this.executeCommand(commands.TOGGLE_POWER, commandParameter)
 		this.setState({ avrSettings: { power: commandParameter } })
@@ -49,7 +48,7 @@ export default class HomePage extends Component {
 
 	async getAvrSettings() {
 		let response = await axios.get(routes.SETTINGS_ROUTE)
-		this.setState({ avrSettings: response.data.result, newVolume: response.data.result.masterVolume })
+		this.setState({ avrSettings: response.data.result })
 		console.log(response.data.result)
 	}
 
