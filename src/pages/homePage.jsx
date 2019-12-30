@@ -11,6 +11,8 @@ import _ from 'lodash';
 
 import { ReactComponent as PowerOnIcon } from '../assets/icons/powerOn.svg'
 import { ReactComponent as PowerOffIcon } from '../assets/icons/powerOff.svg'
+import { ReactComponent as VolumeOffIcon } from '../assets/icons/volumeOff.svg'
+import { ReactComponent as VolumeOnIcon } from '../assets/icons/volumeOn.svg'
 
 const searchDebounceTimeInMs = 50;
 
@@ -42,6 +44,13 @@ export default class HomePage extends Component {
 		//this.setState({ avrSettings: { power: commandParameter } })
 	}
 
+	toggleMute = () => {
+		const commandParameter = this.state.avrSettings.mute === false ? true : false;
+		console.log(`mute ${commandParameter}`)
+		this.setState({ avrSettings: { mute: commandParameter } })
+		this.executeCommand(commands.TOGGLE_MUTE, commandParameter)
+	}
+
 	setNewVolume = () => {
 		console.log(`setting new volume: ${this.state.newVolume}`)
 		this.executeCommand(commands.SET_VOLUME, this.state.newVolume)
@@ -70,7 +79,7 @@ export default class HomePage extends Component {
 
 	render() {
 		const allCommands = [
-			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.INTERNET_RADIO, displayName: "NETWORK" })} />,
+			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.FIP, displayName: "NETWORK" })} />,
 			<CommandButton displayname="TV AUDIO" selection={this.state.avrSettings.selection} name="TV Audio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.TV_AUDIO, displayName: "TV AUDIO" })} />,
 			<CommandButton displayname="DVD" selection={this.state.avrSettings.selection} name="DVD" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.DVD, displayName: "DVD" })
 			} />
@@ -106,9 +115,14 @@ export default class HomePage extends Component {
 					<div style={{ marginTop: "auto" }}>
 						<Row className="wrapper">
 							<Col xs={{ size: 12 }} style={{ marginBottom: "40px" }}>
-								<span style={{ position: "fixed", left: "50%", "font-weight": "bold" }}>
-									{this.state.newVolume}
-								</span>
+								<div className="form-inline" style={{ position: "fixed", left: "50%" }}>
+									<button className="unstyled-button" onClick={this.toggleMute}>
+										{this.state.avrSettings.mute === true ? <VolumeOffIcon /> : <VolumeOnIcon />}
+									</button>
+									<span style={{ "font-weight": "bold" }}>
+										{this.state.newVolume}
+									</span>
+								</div>
 							</Col>
 						</Row>
 						<Row className="wrapper">
