@@ -45,9 +45,9 @@ export default class HomePage extends Component {
 	}
 
 	toggleMute = () => {
-		console.log('mute')
 		const commandParameter = this.state.avrSettings.mute === false ? true : false;
-		console.log(commandParameter);
+		console.log(`mute ${commandParameter}`)
+		this.setState({ avrSettings: { mute: commandParameter } })
 		this.executeCommand(commands.TOGGLE_MUTE, commandParameter)
 	}
 
@@ -79,7 +79,7 @@ export default class HomePage extends Component {
 
 	render() {
 		const allCommands = [
-			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.INTERNET_RADIO, displayName: "NETWORK" })} />,
+			<CommandButton displayname="NETWORK" selection={this.state.avrSettings.selection} name="Internet Radio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.FIP, displayName: "NETWORK" })} />,
 			<CommandButton displayname="TV AUDIO" selection={this.state.avrSettings.selection} name="TV Audio" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.TV_AUDIO, displayName: "TV AUDIO" })} />,
 			<CommandButton displayname="DVD" selection={this.state.avrSettings.selection} name="DVD" action={() => this.executeCommandWrapper({ command: commands.SET_INPUT, commandParameter: inputTypes.DVD, displayName: "DVD" })
 			} />
@@ -117,7 +117,7 @@ export default class HomePage extends Component {
 							<Col xs={{ size: 12 }} style={{ marginBottom: "40px" }}>
 								<div className="form-inline" style={{ position: "fixed", left: "50%" }}>
 									<button className="unstyled-button" onClick={this.toggleMute}>
-										{!this.state.avrSettings.mute && this.state.avrSettings.mute === true ? <VolumeOffIcon /> : <VolumeOnIcon />}
+										{this.state.avrSettings.mute === true ? <VolumeOffIcon /> : <VolumeOnIcon />}
 									</button>
 									<span style={{ "font-weight": "bold" }}>
 										{this.state.newVolume}
