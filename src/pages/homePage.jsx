@@ -24,9 +24,9 @@ export default class HomePage extends Component {
 			avrSettings: {
 				masterVolume: 25,
 				power: 'STANDBY',
-				mute: false
+				mute: 'off'
 			},
-			newVolumne: 25
+			newVolume: 25
 		}
 
 		this.debouncedOnChange = _.debounce(() => this.setNewVolume(), searchDebounceTimeInMs);
@@ -45,9 +45,8 @@ export default class HomePage extends Component {
 	}
 
 	toggleMute = () => {
-		const commandParameter = this.state.avrSettings.mute === false ? "on" : "off";
+		const commandParameter = this.state.avrSettings.mute === 'off' ? "on" : "off";
 		console.log(`mute ${commandParameter}`)
-		this.setState({ avrSettings: { mute: !this.state.avrSettings.mute } })
 		this.executeCommand(commands.TOGGLE_MUTE, commandParameter)
 	}
 
@@ -117,7 +116,7 @@ export default class HomePage extends Component {
 							<Col xs={{ size: 12 }} style={{ marginBottom: "40px" }}>
 								<div className="form-inline" style={{ position: "fixed", left: "50%" }}>
 									<button className="unstyled-button" onClick={this.toggleMute}>
-										{this.state.avrSettings.mute === true ? <VolumeOffIcon /> : <VolumeOnIcon />}
+										{this.state.avrSettings.mute === 'on' ? <VolumeOffIcon /> : <VolumeOnIcon />}
 									</button>
 									<span style={{ "font-weight": "bold" }}>
 										{this.state.newVolume}
