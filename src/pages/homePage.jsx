@@ -45,7 +45,7 @@ export default class HomePage extends Component {
 	}
 
 	toggleMute = () => {
-		const commandParameter = this.state.avrSettings.mute === false ? true : false;
+		const commandParameter = this.state.avrSettings.mute === false ? "on" : "off";
 		console.log(`mute ${commandParameter}`)
 		this.setState({ avrSettings: { mute: commandParameter } })
 		this.executeCommand(commands.TOGGLE_MUTE, commandParameter)
